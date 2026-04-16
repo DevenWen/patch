@@ -38,6 +38,15 @@ defmodule Patch.Apply do
 
   defp direct_exception?(function, %FunctionClauseError{} = error) do
     info = Function.info(function)
-    info[:arity] == error.arity and info[:name] == error.function
+    info[:arity] == error.arity and info[:module] == error.module and check_function_name(info, error)
+  end
+
+  defp check_function_name(function_info, error) do
+    # for Erlang inline will change the local function name
+    if function_info[:type] == :local do
+      true
+    else
+      function_info[:name] == error.function
+    end
   end
 end
