@@ -43,10 +43,10 @@ defmodule Patch.Apply do
 
   defp check_function_name(function_info, error) do
     # for Erlang inline will change the local function name
-    if function_info[:type] == :local do
-      true
-    else
-      function_info[:name] == error.function
+    cond do
+      function_info[:name] == error.function -> true
+      function_info[:type] == :local -> true
+      true -> false
     end
   end
 end
